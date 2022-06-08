@@ -5,7 +5,7 @@ test:
 	composer exec phpunit tests
 
 lint:
-	composer exec phpcs -v -- --standard=PSR12 app -np
+	composer exec phpcs -v -- --standard=PSR12 src public -np
 
 test-coverage:
 	composer exec --verbose phpunit -- --testsuite gh-actions --coverage-clover build/logs/clover.xml
