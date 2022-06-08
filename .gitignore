@@ -1,0 +1,9 @@
+/vendor/
+/build/
+*.cache
+clover.xml
+/xml-coverage/
+*.txt
+/repo/*
+.idea/
+/.env
