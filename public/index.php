@@ -33,8 +33,12 @@ $postMapper = new PostMapper($connection);
 // Create app
 $app = AppFactory::create();
 
-$app->get('/', function (Request $request, Response $response, $args) use ($twig) {
-    $body = $twig->render('index.html.twig');
+$app->get('/', function (Request $request, Response $response, $args) use ($twig, $postMapper) {
+    $posts = $postMapper->getList('DESC');
+
+    $body = $twig->render('index.html.twig', [
+        'posts' => $posts
+    ]);
     $response->getBody()->write($body);
     return $response;
 });
