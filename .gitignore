@@ -7,3 +7,4 @@ clover.xml
 /repo/*
 .idea/
 /.env
+*.png

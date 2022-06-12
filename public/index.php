@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Blog\LatestPosts;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
@@ -28,13 +29,12 @@ try {
     die();
 }
 
-$postMapper = new PostMapper($connection);
-
 // Create app
 $app = AppFactory::create();
 
-$app->get('/', function (Request $request, Response $response, $args) use ($twig, $postMapper) {
-    $posts = $postMapper->getList('DESC');
+$app->get('/', function (Request $request, Response $response) use ($twig, $connection) {
+    $latestPosts = new LatestPosts($connection);
+    $posts = $latestPosts->get(3);
 
     $body = $twig->render('index.html.twig', [
         'posts' => $posts
@@ -43,7 +43,7 @@ $app->get('/', function (Request $request, Response $response, $args) use ($twig
     return $response;
 });
 
-$app->get('/about', function (Request $request, Response $response, $args) use ($twig) {
+$app->get('/about', function (Request $request, Response $response) use ($twig) {
     $body = $twig->render('about.html.twig', [
         'name' => 'Test'
     ]);
@@ -51,7 +51,8 @@ $app->get('/about', function (Request $request, Response $response, $args) use (
     return $response;
 });
 
-$app->get('/{url_key}', function (Request $request, Response $response, $args) use ($twig, $postMapper) {
+$app->get('/{url_key}', function (Request $request, Response $response, $args) use ($twig, $connection) {
+    $postMapper = new PostMapper($connection);
     $post = $postMapper->getByUrlKey((string) $args['url_key']);
 
     if (empty($post)) {
