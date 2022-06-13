@@ -24,7 +24,8 @@
         "slim/slim": "^4.7",
         "twig/twig": "^3.0",
         "vlucas/phpdotenv": "^5.4",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "php-di/php-di": "6.3.4"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.5"

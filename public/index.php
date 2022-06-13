@@ -7,14 +7,18 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
 use Blog\PostMapper;
 use Blog\Slim\TwigMiddleware;
+use DI\ContainerBuilder;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$loader = new FilesystemLoader('../templates');
-$twig = new Environment($loader);
+$builder = new ContainerBuilder();
+$builder->addDefinitions('../config/di.php');
+
+$container = $builder->build();
+
+AppFactory::setContainer($container);
 
 $config = include '../config/database.php';
 $dsn = "mysql:host={$config['host']};dbname={$config['dsn']};char={$config['char']}";
@@ -33,6 +37,7 @@ try {
 // Create app
 $app = AppFactory::create();
 
+$twig = $container->get(Environment::class);
 $app->add(new TwigMiddleware($twig));
 
 $app->get('/', function (Request $request, Response $response) use ($twig, $connection) {
