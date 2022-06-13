@@ -24,7 +24,7 @@ class HomePage
     /**
      * HomePage constructor.
      * @param LatestPosts $latestPosts
-     * @param Environment $view
+     * @param Environment $twig
      */
     public function __construct(LatestPosts $latestPosts, Environment $twig)
     {
