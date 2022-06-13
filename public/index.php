@@ -10,35 +10,28 @@ use Twig\Environment;
 use Blog\PostMapper;
 use Blog\Slim\TwigMiddleware;
 use DI\ContainerBuilder;
+use Dotenv\Dotenv;
+use Blog\Database;
 
 require __DIR__ . '/../vendor/autoload.php';
 
 $builder = new ContainerBuilder();
 $builder->addDefinitions('../config/di.php');
 
+$dotenv = Dotenv::createImmutable(dirname(__DIR__));
+$dotenv->load();
+
 $container = $builder->build();
 
 AppFactory::setContainer($container);
-
-$config = include '../config/database.php';
-$dsn = "mysql:host={$config['host']};dbname={$config['dsn']};char={$config['char']}";
-$username = $config['username'];
-$password = $config['password'];
-
-try {
-    $connection = new PDO($dsn, $username, $password);
-    $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-} catch (PDOException $exception) {
-    echo "Database error:  {$exception->getMessage()}";
-    die();
-}
 
 // Create app
 $app = AppFactory::create();
 
 $twig = $container->get(Environment::class);
 $app->add(new TwigMiddleware($twig));
+
+$connection = $container->get(Database::class)->getConnection();
 
 $app->get('/', function (Request $request, Response $response) use ($twig, $connection) {
     $latestPosts = new LatestPosts($connection);
