@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Blog\LatestPosts;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
@@ -12,6 +11,7 @@ use Blog\Slim\TwigMiddleware;
 use DI\ContainerBuilder;
 use Dotenv\Dotenv;
 use Blog\Database;
+use Blog\Route\HomePage;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -33,16 +33,7 @@ $app->add(new TwigMiddleware($twig));
 
 $connection = $container->get(Database::class)->getConnection();
 
-$app->get('/', function (Request $request, Response $response) use ($twig, $connection) {
-    $latestPosts = new LatestPosts($connection);
-    $posts = $latestPosts->get(3);
-
-    $body = $twig->render('index.html.twig', [
-        'posts' => $posts
-    ]);
-    $response->getBody()->write($body);
-    return $response;
-});
+$app->get('/', HomePage::class . ':execute');
 
 $app->get('/about', function (Request $request, Response $response) use ($twig) {
     $body = $twig->render('about.html.twig', [
