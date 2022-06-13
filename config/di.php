@@ -7,8 +7,10 @@ use Twig\Loader\FilesystemLoader;
 use function DI\autowire;
 use function DI\get;
 use Blog\Database;
+use Blog\Twig\AssetExtension;
 
 return [
+    'server.params' => $_SERVER,
     FilesystemLoader::class => autowire()
         ->constructorParameter('paths', '../templates'),
 
@@ -23,4 +25,7 @@ return [
         ->constructorParameter('username', $_ENV['MYSQL_USER'])
         ->constructorParameter('password', $_ENV['MYSQL_ROOT_PASSWORD'])
         ->constructorParameter('options', []),
+
+    AssetExtension::class => autowire()
+        ->constructorParameter('serverParams', get('server.params')),
 ];
