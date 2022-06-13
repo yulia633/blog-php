@@ -9,6 +9,7 @@ use Slim\Factory\AppFactory;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Blog\PostMapper;
+use Blog\Slim\TwigMiddleware;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -32,6 +33,8 @@ try {
 // Create app
 $app = AppFactory::create();
 
+$app->add(new TwigMiddleware($twig));
+
 $app->get('/', function (Request $request, Response $response) use ($twig, $connection) {
     $latestPosts = new LatestPosts($connection);
     $posts = $latestPosts->get(3);
@@ -46,6 +49,20 @@ $app->get('/', function (Request $request, Response $response) use ($twig, $conn
 $app->get('/about', function (Request $request, Response $response) use ($twig) {
     $body = $twig->render('about.html.twig', [
         'name' => 'Test'
+    ]);
+    $response->getBody()->write($body);
+    return $response;
+});
+
+$app->get('/blog[/{page}]', function (Request $request, Response $response, $args) use ($twig, $connection) {
+    $postMapper = new PostMapper($connection);
+
+    $page = isset($args['page']) ? (int) $args['page'] : 1;
+    $limit = 2;
+    $posts = $postMapper->getList($page, $limit, 'DESC');
+
+    $body = $twig->render('blog.html.twig', [
+        'posts' => $posts
     ]);
     $response->getBody()->write($body);
     return $response;
