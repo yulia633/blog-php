@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Blog;
 
-use http\Exception\InvalidArgumentException;
+use InvalidArgumentException;
 use PDO;
 use PDOException;
 
@@ -28,7 +28,7 @@ class Database
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         } catch (PDOException $exception) {
-            throw new \InvalidArgumentException($exception->getMessage());
+            throw new InvalidArgumentException($exception->getMessage());
         }
     }
 
