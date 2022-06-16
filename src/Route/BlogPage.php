@@ -40,7 +40,7 @@ class BlogPage
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $page = isset($args['page']) ? (int) $args['page'] : 1;
         $limit = 2;
