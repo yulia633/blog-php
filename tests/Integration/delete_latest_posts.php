@@ -16,4 +16,3 @@ $statement = $connection->prepare('DELETE FROM post WHERE title LIKE (:title)');
 $title = 'Test Post 1';
 $statement->bindParam(':title', $title);
 $statement->execute();
-

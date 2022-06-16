@@ -12,13 +12,11 @@ use Blog\Test\Integration\ContainerProvider;
 class LatestPostsTest extends TestCase
 {
     private LatestPosts $latestPosts;
-    
 
     protected function setUp(): void
     {
         require 'delete_latest_posts.php';
         require 'create_latest_posts.php';
-        
         $container = ContainerProvider::getContainer();
         $this->latestPosts = new LatestPosts($container->get(Database::class));
     }
