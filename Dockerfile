@@ -6,4 +6,8 @@ RUN apt-get update && apt-get install -y zip git
 
 RUN docker-php-source extract && docker-php-ext-install pdo_mysql mysqli && docker-php-source delete
 
+RUN pecl install xdebug && docker-php-ext-enable xdebug
+
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+COPY ./xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini

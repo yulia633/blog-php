@@ -22,10 +22,14 @@ return [
         ->constructorParameter('connection', get(PDO::class)),
 
     PDO::class => autowire()
-        ->constructorParameter('dsn', $_ENV['MYSQL_DSN'])
-        ->constructorParameter('username', $_ENV['MYSQL_USER'])
-        ->constructorParameter('password', $_ENV['MYSQL_ROOT_PASSWORD'])
-        ->constructorParameter('options', []),
+        ->constructor(
+            $_ENV['MYSQL_DSN'],
+            $_ENV['MYSQL_USER'],
+            $_ENV['MYSQL_ROOT_PASSWORD'],
+            []
+        )
+        ->method('setAttribute', PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION)
+        ->method('setAttribute', PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC),
 
     AssetExtension::class => autowire()
         ->constructorParameter('serverParams', get('server.params')),
