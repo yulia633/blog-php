@@ -34,6 +34,9 @@ MYSQL_PASSWORD='testpassword'
 ...
 ```
 
+4. Создайте базу данных с таблицей `post`. Пример в папке`database`.
+
+
 **Команды:**
 
 ```bash
